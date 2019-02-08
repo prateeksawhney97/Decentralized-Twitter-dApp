@@ -42,7 +42,7 @@ contract("DTwitter contract", function () {
   it("should have created a user 'testhandle'", async function () {
 
     // get user details from contract
-
+    const user = await users(web3.utils.keccak256(username)).call();
     assert.equal(user.username, username);
     assert.equal(user.description, description);
 
