@@ -8,7 +8,7 @@ import { EventEmitter } from 'events';
 // the URL's pathname. If no player is found with the given
 // number, then a "player not found" message is displayed.
 class UserTweets extends Component {
-  
+
   //#region Constructor
   constructor(props, context){
     super(props, context);
@@ -37,13 +37,14 @@ class UserTweets extends Component {
    */
   _getUserDetails = async(username) => {
       // get user details and update state
-      let user = { creationDate: '' } // remove me
+      //let user = { creationDate: '' } // remove me
+      let user = await DTwitter.methods.users(web3.utils.keccak256(username)).call();
 
       // update picture url for ipfs
-      
+      user.picture = user.picture.length > 0 ? EmbarkJS.Storage.getUrl(user.picture) : imgAvatar;
       // format the user.creationDate for display
       user.creationDate = this._formatDate(user.creationDate);
-      
+
       this.setState({user: user});
   }
 
@@ -51,15 +52,15 @@ class UserTweets extends Component {
    * Subscribes to a tweet event from the contract.
    * When a tweet is received, it is appended to the list of
    * tweets.
-   * 
-   * @param {String} username 
+   *
+   * @param {String} username
    * @returns {null}
    */
   _subscribeToNewTweetEvent(username){
     this.event = new EventEmitter() // replace me with the NewTweet subscription
       .on('data', (event) => {
         let tweets = this.state.tweets;
-        
+
         tweets.push({
           content: event.returnValues.tweet,
           time: this._formatDate(event.returnValues.time)
@@ -131,7 +132,7 @@ class UserTweets extends Component {
             <PageHeader>{ this.props.match.params.username } <small>doesn't exist!</small></PageHeader>
           </Col>
         </Row>
-      </Grid>);  
+      </Grid>);
     }else {
       // Render real UI ...
       const {username, description, picture, creationDate} = user;
@@ -152,7 +153,7 @@ class UserTweets extends Component {
                 <p>{ description }</p>
                 <p className='created'>Created { creationDate }</p>
               </Thumbnail>
-              
+
             </Col>
             <Col xs={8}>
               <ListGroup className='tweets'>
