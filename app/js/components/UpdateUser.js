@@ -24,15 +24,15 @@ class UpdateUser extends Component {
   //#region Component events
   /**
    * Handles the 'Update user' button click event which
-   * sends a transaction to the contract to update the 
+   * sends a transaction to the contract to update the
    * user's profile.
-   * 
+   *
    * @returns {null}
    */
   _handleClick = async () => {
     // if the form has not been updated, do nothing
     if (!this.state.formUpdated) return;
-    
+
     // show loading state
     this.setState({ isLoading: true });
 
@@ -43,7 +43,7 @@ class UpdateUser extends Component {
     if (this.state.picture !== '') {
       try {
         // upload the file to ipfs and get the resulting hash
-        hash = '';
+        hash = await EmbarkJS.Storage.uploadFile([this.inputPicture]);
       }
       catch (err) {
         // stop loading state and show user the error
@@ -54,14 +54,14 @@ class UpdateUser extends Component {
     const { account, user } = this.props;
     const { description } = this.state;
     // get a handle for the editAccount method
-
+    const editAccount = DTwitter.methods.editAccount(web3.utils.keccak256(user.username), description, hash);
     // get a gas estimate for the transaction with the input username
     // and description
-
+    const gasEstimate = await editAccount.estimateGas({ from: web3.eth.defaultAccount });
     try {
       // send the transaction with our gas estimate (plus a little bit more in case the contract)
       // state has changed since we got our estimate
-      
+      const result = await editAccount.send({ from: web3.eth.defaultAccount, gas: gasEstimate + 1000 });
       // if (result.status && !Boolean(result.status.toString().replace('0x', ''))) {
       //   return this.setState({ isLoading: false, formState: 'error', formUpdated: false, error: 'Error executing transaction, transaction details: ' + JSON.stringify(result) });
       // }
@@ -83,11 +83,11 @@ class UpdateUser extends Component {
 
   /**
    * When user changes an input value, record that in the state.
-   * Additionally, sets state that the form has been updated to 
+   * Additionally, sets state that the form has been updated to
    * allow for more fine validation control
-   * 
+   *
    * @param {SyntheticEvent} cross-browser wrapper around the browser’s native event
-   * 
+   *
    * @return {null}
    */
   _handleChange(e) {
