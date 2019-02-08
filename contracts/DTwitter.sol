@@ -82,7 +82,7 @@ contract DTwitter {
         users[usernameHash].description = description;
         // add entry to our owners mapping so we can retrieve
         // user by their address
-
+        owners[msg.sender] = usernameHash;
     }
 
     /**
