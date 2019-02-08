@@ -140,6 +140,7 @@ contract DTwitter {
         // update the user's tweets at the tweet index
         user.tweets[tweetIndex] = content;
         // emit the tweet event and notify the listeners
+        emit NewTweet(usernameHash, content, now);
     }
 
 }
