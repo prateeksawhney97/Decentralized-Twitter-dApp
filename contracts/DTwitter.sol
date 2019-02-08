@@ -25,11 +25,11 @@ contract DTwitter {
      */
     mapping (bytes32 => User) public users;
 
-    
+
     /**
      * owners
      *
-     * Maps the address of the owner account to the username hash of the 
+     * Maps the address of the owner account to the username hash of the
      * owned user. This is needed so we can retrieve an account from the
      * current address
      *
@@ -74,12 +74,15 @@ contract DTwitter {
         // reject if sending adddress already created a user
         require(owners[msg.sender] == 0);
 
-        // add a user to the users mapping and populate details 
+        // add a user to the users mapping and populate details
         // (creationDate, owner, username, description)
-
+        users[usernameHash].creationDate = now;
+        users[usernameHash].owner = msg.sender;
+        users[usernameHash].username = username;
+        users[usernameHash].description = description;
         // add entry to our owners mapping so we can retrieve
         // user by their address
-        
+
     }
 
     /**
@@ -110,7 +113,7 @@ contract DTwitter {
      */
     function userExists(bytes32 usernameHash) public view returns (bool) {
         // must check a property... bc solidity!
-        
+
     }
 
     /**
