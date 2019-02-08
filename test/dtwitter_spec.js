@@ -82,7 +82,7 @@ contract("DTwitter contract", function () {
     const usernameHash = web3.utils.keccak256(username);
 
     // send the tweet
-
+    await tweet(tweetContent).send();
     // subscribe to new tweet events
     DTwitter.events.NewTweet({
       filter: { _from: usernameHash },
