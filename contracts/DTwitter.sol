@@ -99,7 +99,7 @@ contract DTwitter {
         require(users[usernameHash].owner == msg.sender);
 
         // update the description (could be empty)
-
+        users[usernameHash].description = description;
         // only update the user's picture if the hash passed in is
         // not empty or null (essentially disallows deletions)
     }
