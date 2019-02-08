@@ -6,7 +6,7 @@ import FieldGroup from './FieldGroup';
 /**
  * Class that renders a form to allow the user to create
  * a tweet that is stored in the contract.
- * 
+ *
  * @extends React.Component
  */
 class DoTweet extends Component{
@@ -32,7 +32,7 @@ class DoTweet extends Component{
    * Handles the 'Tweet' button click event which
    * sends a transaction to the contract to store a
    * tweet for the current user.
-   * 
+   *
    * @returns {null}
    */
   _handleClick = async (e) => {
@@ -41,19 +41,19 @@ class DoTweet extends Component{
     if(this._getValidationState() === 'error' || !this.state.tweetHasChanged){
       return e.preventDefault();
     }
-    
+
     // show loading state
     this.setState({ isLoading: true });
 
     const { username, account, onAfterTweet } = this.props;
     const tweet = DTwitter.methods.tweet(this.state.tweet);
-    
+
     try{
       // estimate gas before sending tweet transaction
-      
+      const gasEstimate = await tweet.estimateGas({ from: web3.eth.defaultAccount });
       // send the tweet transaction plus a little extra gas in case the contract state
       // has changed since we've done our gas estimate
-      
+      await tweet.send({ from: web3.eth.defaultAccount, gas: gasEstimate + 1000 });
       // remove loading state
       this.setState({ isLoading: false });
 
@@ -68,9 +68,9 @@ class DoTweet extends Component{
 
    /**
    * When user changes an input value, record that in the state.
-   * 
+   *
    * @param {SyntheticEvent} cross-browser wrapper around the browser’s native event
-   * 
+   *
    * @return {null}
    */
   _handleChange(e) {
@@ -84,8 +84,8 @@ class DoTweet extends Component{
   /**
    * Validates the form. Return null for no state change,
    * 'success' if valid, and error' if invalid.
-   * 
-   * @return {string} null for no state change, 'success' 
+   *
+   * @return {string} null for no state change, 'success'
    * if valid, and error' if invalid
    */
   _getValidationState() {
@@ -123,7 +123,7 @@ class DoTweet extends Component{
         />
         <Button
           bsStyle="primary"
-          disabled={ !isValid || Boolean(error) || !tweetHasChanged }            
+          disabled={ !isValid || Boolean(error) || !tweetHasChanged }
           onClick={ (!isValid || Boolean(error) || !tweetHasChanged) ? null : (e) => this._handleClick(e) }
         >{isLoading ? 'Loading...' : 'Post tweet'}</Button>
         <FormGroup
