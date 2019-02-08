@@ -136,7 +136,7 @@ contract DTwitter {
         // get our user
         User storage user = users[usernameHash];
         // get our new tweet index
-
+        uint tweetIndex = user.tweets.length++;
         // update the user's tweets at the tweet index
 
         // emit the tweet event and notify the listeners
