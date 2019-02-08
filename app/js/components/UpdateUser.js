@@ -62,9 +62,9 @@ class UpdateUser extends Component {
       // send the transaction with our gas estimate (plus a little bit more in case the contract)
       // state has changed since we got our estimate
       const result = await editAccount.send({ from: web3.eth.defaultAccount, gas: gasEstimate + 1000 });
-      // if (result.status && !Boolean(result.status.toString().replace('0x', ''))) {
-      //   return this.setState({ isLoading: false, formState: 'error', formUpdated: false, error: 'Error executing transaction, transaction details: ' + JSON.stringify(result) });
-      // }
+      if (result.status && !Boolean(result.status.toString().replace('0x', ''))) {
+        return this.setState({ isLoading: false, formState: 'error', formUpdated: false, error: 'Error executing transaction, transaction details: ' + JSON.stringify(result) });
+      }
 
       // stop loading state, and render the form as successful
       this.setState({ isLoading: false, formState: 'success', formUpdated: false });
