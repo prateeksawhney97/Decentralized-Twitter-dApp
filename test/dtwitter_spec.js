@@ -73,7 +73,7 @@ contract("DTwitter contract", function () {
     // call edit account
     await editAccount(usernameHash, updatedDescription, updatedImageHash).send();
     // then fetch the user details with the usernamehash
-
+    const updatedUserDetails = await users(usernameHash).call();
     assert.equal(updatedUserDetails.description, updatedDescription);
     assert.equal(updatedUserDetails.picture, updatedImageHash);
   });
