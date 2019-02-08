@@ -57,7 +57,14 @@ class UserTweets extends Component {
    * @returns {null}
    */
   _subscribeToNewTweetEvent(username){
-    this.event = new EventEmitter() // replace me with the NewTweet subscription
+    DTwitter.events.NewTweet({
+          filter: {_from: web3.utils.keccak256(username)},
+          fromBlock: 1
+        }, (err, event) => {
+          if (err){
+            this.props.onError(err, 'UserTweets._subscribeToNewTweetEvent');
+          }
+      })
       .on('data', (event) => {
         let tweets = this.state.tweets;
 
