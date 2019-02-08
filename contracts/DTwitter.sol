@@ -102,6 +102,9 @@ contract DTwitter {
         users[usernameHash].description = description;
         // only update the user's picture if the hash passed in is
         // not empty or null (essentially disallows deletions)
+        if (bytes(pictureHash).length > 0) {
+            users[usernameHash].picture = pictureHash;
+        }
     }
 
     /**
