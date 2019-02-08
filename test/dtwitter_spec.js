@@ -60,7 +60,7 @@ contract("DTwitter contract", function () {
     const usernameHash = web3.utils.keccak256(username);
 
     // check the usernamehash exists
-
+    const exists = await userExists(usernameHash).call();
     assert.equal(exists, true);
   });
 
